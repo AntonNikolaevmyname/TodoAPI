@@ -3,3 +3,4 @@
 - Swagger
 - Nlog
 - MS SQL db
+- DI
