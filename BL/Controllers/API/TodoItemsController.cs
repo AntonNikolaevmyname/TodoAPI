@@ -115,6 +115,25 @@ namespace TodoApi.Controllers.API
                 return BadRequest();
             }
             return Ok();
-        }      
+        }
+
+        /// <summary>
+        /// Завершение задачи
+        /// </summary>
+        /// <param name="id">id задачи</param>
+        /// <returns>Задача</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> CompleteTodoItem(long id)
+        {
+            _logger.LogInformation("CompleteTodoItem");
+            var item = await _todoService.CompleteTodoItem(id);
+
+            if (item == null)
+            {
+                _logger.LogError("CompleteTodoItem NotFound");
+                return NotFound();
+            }
+            return Ok(item);
+        }
     }
 }

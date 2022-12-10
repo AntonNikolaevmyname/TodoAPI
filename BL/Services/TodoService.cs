@@ -28,6 +28,13 @@ namespace TodoApiDTO.BL.Services
         Task<TodoItemDTO> GetTodoItem(long id);
 
         /// <summary>
+        /// Завершение задачи
+        /// </summary>
+        /// <param name="id">id задачи</param>
+        /// <returns>Задача</returns>
+        Task<TodoItemDTO> CompleteTodoItem(long id);
+
+        /// <summary>
         /// Обновление задачи
         /// </summary>
         /// <param name="id">id задачи</param>
@@ -118,6 +125,7 @@ namespace TodoApiDTO.BL.Services
 
             try
             {
+                _context.TodoItems.Update(todoItem);
                 await _context.SaveChangesAsync();
                 return ItemToDTO(todoItem);
             }
@@ -165,6 +173,35 @@ namespace TodoApiDTO.BL.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        /// <summary>
+        /// Завершение задачи
+        /// </summary>
+        /// <param name="id">id задачи</param>
+        /// <returns>Задача</returns>
+        public async Task<TodoItemDTO> CompleteTodoItem(long id)
+        {
+            var todoItem = await _context.TodoItems.FindAsync(id);
+            if (todoItem == null)
+            {
+                return null;
+            }
+
+            todoItem.IsComplete = true;
+
+            try
+            {
+                _context.TodoItems.Update(todoItem);
+                await _context.SaveChangesAsync();
+
+                return ItemToDTO(todoItem);
+            }
+            catch (DbUpdateConcurrencyException) when (!TodoItemExists(id))
+            {
+                _logger.LogError("DbUpdateConcurrencyException");
+                return null;
+            }
         }
 
         private bool TodoItemExists(long id) =>
