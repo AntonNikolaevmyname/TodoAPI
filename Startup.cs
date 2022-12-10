@@ -31,7 +31,7 @@ namespace TodoApi
             services.AddControllers();
             services.AddSwaggerGen( c =>
             {
-                var filePath = 
+                var filePath =
                     Path.Combine(AppContext.BaseDirectory, 
                     Configuration.GetValue<string>("SwaggerDescriptionFileXML"));
                 c.IncludeXmlComments(filePath);
@@ -48,7 +48,6 @@ namespace TodoApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
